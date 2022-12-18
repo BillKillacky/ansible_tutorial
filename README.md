@@ -9,3 +9,6 @@ https://www.learnlinux.tv/getting-started-with-ansible-05-running-elevated-comma
 
 #### ansible docs example with apt module
 https://docs.ansible.com/ansible/latest/collections/ansible/builtin/apt_module.html
+
+#### ansible docs for generic OS package manager
+https://docs.ansible.com/ansible/latest/collections/ansible/builtin/package_module.html
