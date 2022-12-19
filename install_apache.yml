@@ -4,10 +4,20 @@
   become: true
   tasks:
 
-  - name: install php (libapache2-mod-php deb/ubu, php CentOS) and apache (apache2 deb/ubu, httpd CentOS) packages
-    package:
+  - name: install php support and apache (apache2) packages for Deb or Ubu
+    apt:
       name:
-        -  "{{ apache_package }}"
-        -  "{{ php_package }}" 
+        -  apache2
+        -  libapache2-mod-php
       state: latest
       update_cache: yes
+    when: ansible_distribution in ["Debian", "Ubuntu"]
+
+  - name: install php support and apache (httpd) packages on CentOS
+    dnf:
+      name:
+        -  httpd
+        -  php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
