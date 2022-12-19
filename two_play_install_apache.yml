@@ -1,0 +1,23 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: install php support and apache (apache2) packages for Deb or Ubu
+    apt:
+      name:
+        -  apache2
+        -  libapache2-mod-php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution in ["Debian", "Ubuntu"]
+
+  - name: install php support and apache (httpd) packages on CentOS
+    dnf:
+      name:
+        -  httpd
+        -  php
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "CentOS"

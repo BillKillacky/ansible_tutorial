@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: install php (libapache2-mod-php deb/ubu, php CentOS) and apache (apache2 deb/ubu, httpd CentOS) packages
+    package:
+      name:
+        -  "{{ apache_package }}"
+        -  "{{ php_package }}" 
+      state: latest
+      update_cache: yes
