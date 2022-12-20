@@ -18,6 +18,23 @@
       update_cache: true
     when: ansible_distribution in ['Debian', 'Ubuntu']
 
+- hosts: workstations
+  become: true
+  tasks:
+
+  - name: install unzip
+    package: 
+      name: unzip
+
+  - name: install terraform
+    unarchive:
+      src: https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip
+      dest: /usr/local/bin
+      remote_src: true
+      mode: 0755
+      owner: root
+      group: root
+
 - hosts: web_servers
   become: true
   tasks:
@@ -39,6 +56,39 @@
         -  php
       state: latest
     when: ansible_distribution == "CentOS"
+
+  - name: start httpd (CentOS)
+    tags: apache, httpd, centos
+    service:
+      name: httpd
+      state: started
+      enabled: true
+    when: ansible_distribution == 'CentOS'
+
+  - name: change email address for admin
+    tags: apache, httpd, centos
+    lineinfile: 
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin somebody@somewhere.net
+    when: ansible_distribution == "CentOS"
+    register: httpd
+    
+  - name: second change showing need for different register variable
+    tags: apache, httpd, centos
+    lineinfile: 
+      path: /etc/httpd/conf/httpd.conf
+      regexp: '^dump_example'
+      line: dump_example cat_poo
+    when: ansible_distribution == "CentOS"
+    register: httpd_cat_poo
+
+  - name: restart httpd (CentOS)
+    tage: apache, httpd, centos
+    service: 
+      name: httpd
+      state: restarted 
+    when: httpd.changed
 
   - name: copy default html file for site
     tags: apache, apache2, httpd
